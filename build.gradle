@@ -12,20 +12,20 @@ node {
 //declare a build task
 task build
 
-//declare a task to create a zip of the app
 task zip(type: Zip) {
-	from ('.') {
-		include "*"
-		include "bin/**"
-		include "data/**"
-		include "node_modules/**"
-		include "public/**"
-		include "routes/**"
-		include "views/**"
-	}
-	destinationDir(file("dist"))
-	baseName "trainSchedule"
+    from ('.') {
+        include "*"
+        include "bin/**"
+        include "data/**"
+        include "node_modules/**"
+        include "public/**"
+        include "routes/**"
+        include "views/**"
+    }
+    destinationDirectory = file("dist")
+    archiveBaseName = "trainSchedule"
 }
+
 
 //declare task dependencies
 build.dependsOn zip
