@@ -28,10 +28,10 @@ pipeline {
             steps {
                 script {
                     // Get the image ID of the latest image
-                    def latestImage = sh(script: "docker images -q kallurusunil/train-schedule | head -n 1", returnStdout: true).trim()
+                    def latestImage = sh(script: "docker images -q train-schedule | head -n 1", returnStdout: true).trim()
                     
                     // List all images for the given repository
-                    def allImages = sh(script: "docker images -q kallurusunil/train-schedule", returnStdout: true).trim().split('\n')
+                    def allImages = sh(script: "docker images -q train-schedule", returnStdout: true).trim().split('\n')
                     
                     // Filter out the latest image
                     def oldImages = allImages.findAll { it != latestImage }
