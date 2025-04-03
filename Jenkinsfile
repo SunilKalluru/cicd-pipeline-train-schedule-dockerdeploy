@@ -27,7 +27,30 @@ pipeline {
         stage('Clean Old Docker Images') {
             steps {
                 script {
-                    sh 'docker images registry.hub.docker.com/kallurusunil/train-schedule'
+                    // Get the image ID of the latest image
+                    def latestImage = sh(script: "docker images -q registry.hub.docker.com/kallurusunil/train-schedule | head -n 1", returnStdout: true).trim()
+                    
+                    // List all images for the given repository
+                    def allImages = sh(script: "docker images -q registry.hub.docker.com/kallurusunil/train-schedule", returnStdout: true).trim().split('\n')
+                    
+                    // Filter out the latest image
+                    def oldImages = allImages.findAll { it != latestImage }
+                    
+                    if (oldImages) {
+                        echo "Removing old Docker images..."
+                        oldImages.each { imageId ->
+                            sh "docker rmi -f ${imageId}"
+                        }
+                    } else {
+                        echo "No old Docker images to remove."
+                    }
+                }
+            }
+        }
+        stage('List Docker Images') {
+            steps {
+                script {
+                    sh 'docker images -q registry.hub.docker.com/kallurusunil/train-schedule'
                 }
             }
         }
