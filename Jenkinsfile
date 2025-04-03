@@ -27,7 +27,7 @@ pipeline {
         stage('Clean Old Docker Images') {
             steps {
                 script {
-                    sh 'docker images'
+                    sh 'docker images registry.hub.docker.com/kallurusunil/train-schedule'
                 }
             }
         }
