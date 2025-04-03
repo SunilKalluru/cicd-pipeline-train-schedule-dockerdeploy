@@ -24,6 +24,29 @@ pipeline {
                 }
             }
         }
+        stage('Clean Old Docker Images') {
+            steps {
+                script {
+                    // Get the image ID of the latest image
+                    def latestImage = sh(script: "docker images -q kallurusunil/train-schedule | head -n 1", returnStdout: true).trim()
+                    
+                    // List all images for the given repository
+                    def allImages = sh(script: "docker images -q kallurusunil/train-schedule", returnStdout: true).trim().split('\n')
+                    
+                    // Filter out the latest image
+                    def oldImages = allImages.findAll { it != latestImage }
+                    
+                    if (oldImages) {
+                        echo "Removing old Docker images..."
+                        oldImages.each { imageId ->
+                            sh "docker rmi -f ${imageId}"
+                        }
+                    } else {
+                        echo "No old Docker images to remove."
+                    }
+                }
+            }
+        }
         stage('Push Docker Image') {
             when {
                 branch 'feature/pipeline'
