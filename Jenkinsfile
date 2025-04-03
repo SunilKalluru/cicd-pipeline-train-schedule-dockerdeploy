@@ -27,7 +27,7 @@ pipeline {
         stage('Clean Old Docker Images') {
             steps {
                 script {
-                    sh 'docker images ls'
+                    sh 'docker images'
                 }
             }
         }
@@ -36,6 +36,8 @@ pipeline {
                 branch 'feature/pipeline'
             }
             steps {
+                input 'Push to Docker hub?'
+                milestone(1)
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                         app.push("${env.BUILD_NUMBER}")
